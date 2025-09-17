@@ -45,15 +45,18 @@ class MediaResource extends Resource
                 Forms\Components\FileUpload::make('file_path')
                     ->directory('weddings/media')
                     ->visibility('public')
-                    ->acceptedFileTypes(['image/*', 'audio/*']),
+                    ->acceptedFileTypes(['image/*'])
+                    ->hidden(fn($get) => $get('type') === Media::TYPE_PREWEDDING_VIDEO),
                 Forms\Components\TextInput::make('file_url')
                     ->url()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->hidden(fn($get) => $get('type') === Media::TYPE_PREWEDDING_VIDEO),
                 Forms\Components\TextInput::make('youtube_url')
                     ->url()
                     ->maxLength(255)
                     ->label('YouTube URL')
-                    ->helperText('Untuk video, gunakan link YouTube'),
+                    ->helperText('Untuk video, gunakan link YouTube')
+                    ->visible(fn($get) => $get('type') === Media::TYPE_PREWEDDING_VIDEO),
                 Forms\Components\TextInput::make('sort_order')
                     ->numeric()
                     ->default(0),
@@ -69,18 +72,15 @@ class MediaResource extends Resource
                 Tables\Columns\ImageColumn::make('file_path')
                     ->circular()
                     ->size(50)
-                    ->visible(fn($record) => $record && $record->type && in_array($record->type, ['cover', 'background', 'gallery'])),
+                    ->visible(fn($record) => $record && $record->type === Media::TYPE_GALLERY),
                 Tables\Columns\TextColumn::make('wedding.title')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
                     ->color(fn(?string $state): string => match ($state) {
-                        'cover' => 'primary',
-                        'background' => 'secondary',
-                        'gallery' => 'success',
-                        'prewedding_video' => 'warning',
-                        'background_music' => 'info',
+                        Media::TYPE_GALLERY => 'success',
+                        Media::TYPE_PREWEDDING_VIDEO => 'warning',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('title')

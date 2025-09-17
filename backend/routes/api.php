@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\Wedding;
+use App\Models\Guest;
+use App\Models\Media;
+use App\Models\Schedule;
 use App\Http\Controllers\Api\WeddingController;
 use App\Http\Controllers\Api\RSVPController;
 use App\Http\Controllers\Api\GuestController;
@@ -19,6 +23,65 @@ use App\Http\Controllers\Api\GuestController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/invitations/{invitation_code}/{guest_token}', function (string $invitation_code, string $guest_token) {
+    $wedding = Wedding::query()
+        ->where('invitation_code', $invitation_code)
+        ->where('is_active', true)
+        ->firstOrFail();
+
+    $guest = Guest::query()
+        ->where('invite_token', $guest_token)
+        ->where('wedding_id', $wedding->id)
+        ->where('is_active', true)
+        ->firstOrFail();
+
+    $schedules = Schedule::query()
+        ->where('wedding_id', $wedding->id)
+        ->where('is_active', true)
+        ->whereIn('type', match ($guest->session) {
+            'session_1' => ['akad', 'resepsi_1'],
+            'session_2' => ['akad', 'resepsi_2'],
+            'both' => ['akad', 'resepsi_1', 'resepsi_2'],
+            default => ['akad'],
+        })
+        ->orderBy('date')
+        ->orderBy('time')
+        ->get();
+
+    $gallery = Media::query()
+        ->where('wedding_id', $wedding->id)
+        ->where('type', Media::TYPE_GALLERY)
+        ->where('is_active', true)
+        ->orderBy('sort_order')
+        ->get(['id', 'title', 'description', 'file_path', 'file_url']);
+
+    $video = Media::query()
+        ->where('wedding_id', $wedding->id)
+        ->where('type', Media::TYPE_PREWEDDING_VIDEO)
+        ->where('is_active', true)
+        ->orderBy('sort_order')
+        ->first(['id', 'title', 'youtube_url']);
+
+    return response()->json([
+        'wedding' => [
+            'title' => $wedding->title,
+            'wedding_date' => $wedding->wedding_date,
+            'cover_photo' => $wedding->cover_photo,
+            'background_photo' => $wedding->background_photo,
+            'background_music' => $wedding->background_music,
+        ],
+        'guest' => [
+            'name' => $guest->name,
+            'session' => $guest->session,
+        ],
+        'schedules' => $schedules,
+        'media' => [
+            'gallery' => $gallery,
+            'prewedding_video' => $video,
+        ],
+    ]);
 });
 
 // Public API routes for wedding invitations

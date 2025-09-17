@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Guest extends Model
 {
@@ -14,6 +15,7 @@ class Guest extends Model
         'wedding_id',
         'name',
         'email',
+        'invite_token',
         'phone',
         'session',
         'is_active',
@@ -49,5 +51,25 @@ class Guest extends Model
             self::SESSION_2 => 'Sesi 2 (Teman & Kolega)',
             self::SESSION_BOTH => 'Kedua Sesi',
         ];
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (Guest $guest): void {
+            if (empty($guest->invite_token)) {
+                $guest->invite_token = static::generateUniqueInviteToken();
+            }
+        });
+    }
+
+    protected static function generateUniqueInviteToken(int $length = 12): string
+    {
+        do {
+            $token = Str::random($length);
+        } while (static::query()->where('invite_token', $token)->exists());
+
+        return $token;
     }
 }

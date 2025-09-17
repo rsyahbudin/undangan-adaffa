@@ -38,11 +38,8 @@ class Media extends Model
     /**
      * Media types constants
      */
-    const TYPE_COVER = 'cover';
-    const TYPE_BACKGROUND = 'background';
     const TYPE_GALLERY = 'gallery';
     const TYPE_PREWEDDING_VIDEO = 'prewedding_video';
-    const TYPE_BACKGROUND_MUSIC = 'background_music';
 
     /**
      * Get all media types
@@ -50,11 +47,8 @@ class Media extends Model
     public static function getTypes(): array
     {
         return [
-            self::TYPE_COVER => 'Cover Photo',
-            self::TYPE_BACKGROUND => 'Background Photo',
             self::TYPE_GALLERY => 'Gallery Photo',
             self::TYPE_PREWEDDING_VIDEO => 'Prewedding Video',
-            self::TYPE_BACKGROUND_MUSIC => 'Background Music',
         ];
     }
 }

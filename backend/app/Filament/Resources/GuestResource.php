@@ -75,6 +75,21 @@ class GuestResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('invite_link')
+                    ->label('Invite Link')
+                    ->state(function (Guest $record) {
+                        $base = rtrim(config('app.url'), '/');
+                        $code = optional($record->wedding)->invitation_code;
+                        $token = $record->invite_token;
+                        if (!$code || !$token) {
+                            return '-';
+                        }
+                        return $base . '/invite/' . $code . '/' . $token;
+                    })
+                    ->copyable()
+                    ->copyMessage('Invite link copied')
+                    ->limit(40)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('session')
                     ->badge()
                     ->color(fn(?string $state): string => match ($state) {
@@ -110,7 +125,7 @@ class GuestResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->headerActions([
-                Tables\Actions\ImportAction::make() ->importer(GuestImporter::class),
+                Tables\Actions\ImportAction::make()->importer(GuestImporter::class),
                 Tables\Actions\ExportAction::make()->exporter(GuestExporter::class),
             ])
             ->bulkActions([
