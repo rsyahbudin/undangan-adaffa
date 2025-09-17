@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* Wedding Invitation Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Times New Roman", serif;
+  background-color: #f5f5f5;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Newspaper Page Styles */
+.newspaper-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Times New Roman", serif;
+  overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .newspaper-page {
+    padding: 15px;
+  }
+
+  /* Adjust font sizes for mobile */
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .text-xl {
+    font-size: 1.125rem;
+  }
+
+  .text-lg {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .newspaper-page {
+    padding: 10px;
+  }
+
+  /* Further reduce font sizes for small mobile */
+  .text-3xl {
+    font-size: 1.25rem;
+  }
+
+  .text-2xl {
+    font-size: 1.125rem;
+  }
+
+  .text-xl {
+    font-size: 1rem;
+  }
+
+  .text-lg {
+    font-size: 0.875rem;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Loading animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Print styles */
+@media print {
+  .newspaper-page {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

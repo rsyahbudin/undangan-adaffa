@@ -1,0 +1,6 @@
+wedding,name,email,phone,session,notes,is_active
+"Wedding John & Jane","Ahmad Syahbudin","ahmad@example.com","081234567890","session_1","Keluarga dekat","1"
+"Wedding John & Jane","Siti Nurhaliza","siti@example.com","081234567891","session_1","Saudara","1"
+"Wedding John & Jane","Budi Santoso","budi@example.com","081234567892","session_2","Teman kuliah","1"
+"Wedding John & Jane","Dewi Kartika","dewi@example.com","081234567893","both","Teman kerja","1"
+"Wedding John & Jane","Rudi Hartono","rudi@example.com","081234567894","session_2","Kolega","0"
