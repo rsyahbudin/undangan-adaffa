@@ -80,16 +80,18 @@ class GuestResource extends Resource
                     ->state(function (Guest $record) {
                         $base = rtrim(config('app.url'), '/');
                         $code = optional($record->wedding)->invitation_code;
-                        $token = $record->invite_token;
-                        if (!$code || !$token) {
+                        $name = urlencode($record->name);
+                        $session = $record->session;
+                        if (!$code || !$name || !$session) {
                             return '-';
                         }
-                        return $base . '/invite/' . $code . '/' . $token;
+                        return $base . '/invite/' . $code . '/' . $name . '/' . $session;
                     })
                     ->copyable()
                     ->copyMessage('Invite link copied')
-                    ->limit(40)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(false)
+                    ->sortable(false)
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('session')
                     ->badge()
                     ->color(fn(?string $state): string => match ($state) {

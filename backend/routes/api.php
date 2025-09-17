@@ -25,14 +25,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/invitations/{invitation_code}/{guest_token}', function (string $invitation_code, string $guest_token) {
+Route::get('/invitations/{invitation_code}/{guest_name}/{session}', function (string $invitation_code, string $guest_name, string $session) {
     $wedding = Wedding::query()
         ->where('invitation_code', $invitation_code)
         ->where('is_active', true)
         ->firstOrFail();
 
     $guest = Guest::query()
-        ->where('invite_token', $guest_token)
+        ->where('name', urldecode($guest_name))
+        ->where('session', $session)
         ->where('wedding_id', $wedding->id)
         ->where('is_active', true)
         ->firstOrFail();

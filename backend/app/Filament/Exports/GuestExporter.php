@@ -21,6 +21,18 @@ class GuestExporter extends Exporter
             ExportColumn::make('email'),
             ExportColumn::make('phone'),
             ExportColumn::make('session'),
+            ExportColumn::make('invite_link')
+                ->label('Invite Link')
+                ->state(function (Guest $record): string {
+                    $base = rtrim(config('app.url'), '/');
+                    $code = optional($record->wedding)->invitation_code;
+                    $name = urlencode($record->name);
+                    $session = $record->session;
+                    if (!$code || !$name || !$session) {
+                        return '-';
+                    }
+                    return $base . '/invite/' . $code . '/' . $name . '/' . $session;
+                }),
             ExportColumn::make('notes'),
             ExportColumn::make('is_active'),
             ExportColumn::make('created_at'),
