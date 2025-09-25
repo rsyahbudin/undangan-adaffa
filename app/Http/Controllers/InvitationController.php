@@ -21,7 +21,8 @@ class InvitationController extends Controller
 
         $wedding = $guest->wedding;
         $settings = $wedding->settings;
+        $galleries = $wedding->galleries;
 
-        return view('invitation.show', compact('guest', 'wedding', 'settings'));
+        return view('invitation.show', compact('guest', 'wedding', 'settings', 'galleries'));
     }
 }

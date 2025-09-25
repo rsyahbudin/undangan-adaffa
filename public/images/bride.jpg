@@ -1,0 +1,7 @@
+<svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="180" height="220" fill="#f8d7da"/>
+<circle cx="90" cy="70" r="30" fill="#f2f2f2"/>
+<path d="M 60 110 Q 60 110 90 100 Q 120 110 120 110 Q 120 140 120 180 Q 120 200 90 200 Q 60 200 60 180 Q 60 140 60 110 Z" fill="#f2f2f2"/>
+<text x="90" y="200" text-anchor="middle" fill="#721c24" font-size="14px" font-family="Arial">👰</text>
+</svg>
+
