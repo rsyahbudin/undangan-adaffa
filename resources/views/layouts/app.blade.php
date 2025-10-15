@@ -15,6 +15,12 @@
   <!-- StPageFlip CSS -->
   <link rel="stylesheet" href="https://unpkg.com/stpageflip/dist/stpageflip.min.css" />
 
+  <!-- Swiper CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600&display=swap');
 
@@ -259,7 +265,7 @@
 
     .st-pageflip-nav button {
       background: rgba(255, 255, 255, 0.9) !important;
-      color: #667eea !important;
+      color: #000000 !important;
       border-radius: 50% !important;
       width: 40px !important;
       height: 40px !important;
@@ -275,7 +281,28 @@
   <!-- StPageFlip JS -->
   <script src="{{ asset('js/page-flip.browser.js') }}"></script>
 
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
   @stack('scripts')
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Daftar elemen yang tidak boleh trigger flip
+      const interactiveElements = document.querySelectorAll(
+        '.flipbook-page img, .flipbook-page iframe, .flipbook-page button, .flipbook-page a, .flipbook-page .interactive-element'
+      );
+
+      interactiveElements.forEach(el => {
+        el.addEventListener('click', e => {
+          e.stopPropagation(); // ❗ Hentikan klik supaya tidak flip halaman
+        });
+        el.addEventListener('touchstart', e => {
+          e.stopPropagation(); // ❗ Hentikan gesture flip saat disentuh di mobile
+        });
+      });
+    });
+  </script>
+
 </body>
 
 </html>

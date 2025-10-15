@@ -1,52 +1,77 @@
 <!-- Event Details Page -->
-<div class="flipbook-page text-center relative overflow-hidden h-full flex flex-col bg-white" style="background-image: 
-    radial-gradient(circle at 25% 75%, rgba(120, 119, 198, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 75% 25%, rgba(255, 119, 198, 0.02) 0%, transparent 50%);
-    background-color: #fafafa;">
-    <div class="absolute top-2 left-2 right-2 bottom-2 border border-amber-300/30 rounded-lg pointer-events-none"></div>
-    <div class="absolute top-2 left-2 text-xl text-amber-600/10">💒</div>
-    <div class="absolute top-2 right-2 text-xl text-amber-600/10">🎊</div>
+<div class="flipbook-page text-center relative overflow-hidden h-full flex flex-col bg-[#fafafa]"
+    style="background-image:
+        radial-gradient(circle at 25% 75%, rgba(120,119,198,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(255,119,198,0.03) 0%, transparent 50%);">
 
-    <h2 class="text-lg md:text-xl lg:text-2xl text-amber-800 mb-2 mt-2" style="font-family: 'Dancing Script', cursive;">Detail Acara</h2>
+    <!-- Border Frame -->
+    <div class="absolute top-3 left-3 right-3 bottom-3 border border-black/20 shadow-inner rounded-lg pointer-events-none"></div>
 
-    <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2">
-        <!-- Akad Nikah -->
-        <div class="bg-white/80 p-2 md:p-3 rounded-lg shadow-sm">
-            <h3 class="text-sm md:text-base text-amber-800 mb-1 font-semibold">💍 Akad Nikah</h3>
-            <p class="text-xs text-gray-700 mb-1"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($wedding->akad_date)->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}</p>
-            <p class="text-xs text-gray-700 mb-1"><strong>Waktu:</strong> {{ $wedding->akad_start_time }} - {{ $wedding->akad_end_time }} WIB</p>
-            <p class="text-xs text-gray-700"><strong>Tempat:</strong> {{ $wedding->akad_place }}</p>
+    <!-- Decorative Icons -->
+    <div class="absolute top-3 left-3 text-xl md:text-2xl text-amber-600/10">💒</div>
+    <div class="absolute top-3 right-3 text-xl md:text-2xl text-amber-600/10">🎊</div>
+
+    <!-- Title -->
+    <h2 class="text-2xl md:text-4xl font-extrabold tracking-wide uppercase mt-4 mb-1 md:mb-4"
+        style="font-family: 'Playfair Display', serif;">
+        Event Details
+    </h2>
+    <div class="w-24 h-0.5 bg-black mx-auto mb-4"></div>
+
+    <div class="flex-1 overflow-y-auto px-3 md:px-6 py-3 md:py-4 space-y-3 md:space-y-4">
+
+        <!-- Wedding Ceremony -->
+        <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
+            <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
+                style="font-family: 'Playfair Display', serif;">💍 Akad Nikah</h3>
+            <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
+                <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->akad_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
+                <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->akad_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->akad_end_time)->format('H:i') }} WIB<br>
+                <strong>Venue:</strong> {{ $wedding->akad_place }}
+            </p>
         </div>
 
+        <!-- First Reception -->
         @if($guest->session == 1 && $wedding->reception1_date)
-        <!-- Resepsi 1 -->
-        <div class="bg-white/80 p-2 md:p-3 rounded-lg shadow-sm">
-            <h3 class="text-sm md:text-base text-amber-800 mb-1 font-semibold">🎉 Resepsi Pernikahan</h3>
-            <p class="text-xs text-gray-700 mb-1"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($wedding->reception1_date)->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}</p>
-            <p class="text-xs text-gray-700 mb-1"><strong>Waktu:</strong> {{ $wedding->reception1_start_time }} - {{ $wedding->reception1_end_time }} WIB</p>
-            <p class="text-xs text-gray-700"><strong>Tempat:</strong> {{ $wedding->reception1_place }}</p>
+        <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
+            <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
+                style="font-family: 'Playfair Display', serif;">🎉 Resepsi</h3>
+            <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
+                <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->reception1_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
+                <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->reception1_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->reception1_end_time)->format('H:i') }} WIB<br>
+                <strong>Venue:</strong> {{ $wedding->reception1_place }}
+            </p>
         </div>
         @endif
 
+        <!-- Second Reception -->
         @if($guest->session == 2 && $wedding->reception2_date)
-        <!-- Resepsi 2 -->
-        <div class="bg-white/80 p-2 md:p-3 rounded-lg shadow-sm">
-            <h3 class="text-sm md:text-base text-amber-800 mb-1 font-semibold">🎊 Resepsi Kedua</h3>
-            <p class="text-xs text-gray-700 mb-1"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_date)->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}</p>
-            <p class="text-xs text-gray-700 mb-1"><strong>Waktu:</strong> {{ $wedding->reception2_start_time }} - {{ $wedding->reception2_end_time }} WIB</p>
-            <p class="text-xs text-gray-700"><strong>Tempat:</strong> {{ $wedding->reception2_place }}</p>
+        <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
+            <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
+                style="font-family: 'Playfair Display', serif;">🎊 Second Reception</h3>
+            <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
+                <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
+                <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->reception2_end_time)->format('H:i') }} WIB<br>
+                <strong>Venue:</strong> {{ $wedding->reception2_place }}
+            </p>
         </div>
         @endif
 
-        <!-- Maps -->
+        <!-- Map Section -->
         @if($wedding->maps_url)
-        <div class="bg-white/80 p-2 md:p-3 rounded-lg shadow-sm">
-            <h3 class="text-sm md:text-base text-amber-800 mb-2 font-semibold">📍 Lokasi</h3>
-            <a href="{{ $wedding->maps_url }}" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors duration-300">
-                Buka di Google Maps
-            </a>
+        <div class="w-full max-w-3xl mx-auto px-4">
+            <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-md">
+                <iframe
+                    class="absolute top-0 left-0 w-full h-full"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2367761350256!2d106.87861207540507!3d-6.363394962251041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed302dffac99%3A0x5865ecdaf645cf7f!2sTeras%20Rumah%20Nenek!5e0!3m2!1sen!2sid!4v1760536461758!5m2!1sen!2sid"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
+
         @endif
     </div>
 </div>
-
