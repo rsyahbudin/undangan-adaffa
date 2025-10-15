@@ -42,7 +42,9 @@ class SettingResource extends Resource
                     ->label('Musik (MP3/mpeg)')
                     ->acceptedFileTypes(['audio/mpeg', 'audio/mp3'])
                     ->directory('music')
-                    ->visibility('public'),
+                    ->visibility('public')
+                    ->maxSize(6144)
+                    ->helperText('Maksimal ukuran file: 6MB'),
             ]);
     }
 
