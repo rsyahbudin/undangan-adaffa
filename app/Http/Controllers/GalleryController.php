@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gallery;
 use App\Models\Wedding;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -72,6 +73,13 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery)
     {
-        //
+        // Hapus file fisik jika ada
+        if ($gallery->file_path && Storage::disk('public')->exists($gallery->file_path)) {
+            Storage::disk('public')->delete($gallery->file_path);
+        }
+
+        $gallery->delete();
+
+        return back()->with('success', 'Item galeri berhasil dihapus.');
     }
 }

@@ -7,9 +7,6 @@
     <!-- Border Frame -->
     <div class="absolute top-3 left-3 right-3 bottom-3 border border-black/20 shadow-inner rounded-lg pointer-events-none"></div>
 
-    <!-- Decorative Icons -->
-    <div class="absolute top-3 left-3 text-xl md:text-2xl text-amber-600/10">💒</div>
-    <div class="absolute top-3 right-3 text-xl md:text-2xl text-amber-600/10">🎊</div>
 
     <!-- Title -->
     <h2 class="text-2xl md:text-4xl font-extrabold tracking-wide uppercase mt-4 mb-1 md:mb-4"
@@ -23,7 +20,7 @@
         <!-- Wedding Ceremony -->
         <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
             <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
-                style="font-family: 'Playfair Display', serif;">💍 Akad Nikah</h3>
+                style="font-family: 'Playfair Display', serif;">💍 Wedding Ceremony</h3>
             <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
                 <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->akad_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
                 <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->akad_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->akad_end_time)->format('H:i') }} WIB<br>
@@ -35,7 +32,7 @@
         @if($guest->session == 1 && $wedding->reception1_date)
         <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
             <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
-                style="font-family: 'Playfair Display', serif;">🎉 Resepsi</h3>
+                style="font-family: 'Playfair Display', serif;">🎉 Wedding Reception</h3>
             <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
                 <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->reception1_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
                 <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->reception1_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->reception1_end_time)->format('H:i') }} WIB<br>
@@ -48,7 +45,7 @@
         @if($guest->session == 2 && $wedding->reception2_date)
         <div class="bg-white/90 border border-gray-100 p-3 md:p-6 rounded-lg shadow-sm hover:shadow-md transition">
             <h3 class="text-base md:text-xl text-amber-900 mb-1 md:mb-2 font-semibold uppercase tracking-wide"
-                style="font-family: 'Playfair Display', serif;">🎊 Second Reception</h3>
+                style="font-family: 'Playfair Display', serif;">🎊 Wedding Reception</h3>
             <p class="text-[11px] md:text-sm text-gray-700 leading-relaxed text-center ">
                 <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
                 <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->reception2_end_time)->format('H:i') }} WIB<br>

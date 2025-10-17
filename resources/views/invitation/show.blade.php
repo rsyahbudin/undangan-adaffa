@@ -10,6 +10,7 @@
         @include('invitation.pages.couple')
         @include('invitation.pages.events')
         @include('invitation.pages.gallery')
+        @include('invitation.pages.amplop')
         @include('invitation.pages.rsvp')
         @include('invitation.pages.thankyou')
     </div>
