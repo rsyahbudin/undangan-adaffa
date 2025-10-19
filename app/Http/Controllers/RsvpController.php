@@ -14,6 +14,20 @@ class RsvpController extends Controller
     public function index()
     {
         //
+        $messages = Rsvp::with('guest:id,name')
+        ->whereNotNull('message')
+        ->where('message', '!=', '')
+        ->orderByDesc('created_at')
+        ->get()
+        ->map(function($rsvp) {
+            return [
+                'guest_name' => $rsvp->guest->name,
+                'message' => $rsvp->message,
+                'is_attending' => (bool) $rsvp->is_attending, // ← tambahkan ini
+            ];
+        });
+
+    return response()->json(['messages' => $messages]);
     }
 
     /**
@@ -33,14 +47,9 @@ class RsvpController extends Controller
 
         $validated = $request->validate([
             'is_attending'    => 'required|boolean',
-            'attending_count' => 'nullable|integer|min:0',
             'message'         => 'nullable|string|max:1000',
         ]);
 
-        // Jika tidak hadir → otomatis attending_count = 0
-        if (!$validated['is_attending']) {
-            $validated['attending_count'] = 0;
-        }
 
         // Simpan atau update RSVP
         $rsvp = Rsvp::updateOrCreate(

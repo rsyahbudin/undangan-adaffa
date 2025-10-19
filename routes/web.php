@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\RsvpController;
+
 
 // Default ke undangan umum
 Route::get('/', [InvitationController::class, 'default'])->name('home');
@@ -22,6 +24,10 @@ Route::post('/sesi{session}/{guestSlug}/rsvp', [InvitationController::class, 'rs
     ->whereNumber('session')
     ->name('invitation.rsvp');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
 
+
+Route::get('/rsvp-messages', [RsvpController::class, 'index']);
+Route::post('/rsvp/{guestId}', [RsvpController::class, 'store']);
+
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

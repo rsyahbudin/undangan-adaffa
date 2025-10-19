@@ -141,3 +141,10 @@
         @apply bg-background text-foreground;
     }
 }
+
+#rsvp-form {
+    z-index: 9999 !important;
+    position: relative !important;
+    pointer-events: auto !important;
+  }
+  

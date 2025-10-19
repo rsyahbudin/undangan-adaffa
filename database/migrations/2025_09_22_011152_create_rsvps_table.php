@@ -12,7 +12,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('guest_id')->constrained()->onDelete('cascade');
             $table->boolean('is_attending')->nullable(); // hadir atau tidak
-            $table->integer('attending_count')->nullable(); // jumlah hadir
             $table->text('message')->nullable(); // ucapan
             $table->timestamps();
         });
