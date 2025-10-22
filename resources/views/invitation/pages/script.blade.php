@@ -37,6 +37,7 @@
     // Music autoplay handling with fallback
     let musicPlayed = false;
     let interactionListenersAdded = false;
+
     function initMusic() {
         const audio = document.getElementById('background-music');
         const toggleButton = document.getElementById('music-toggle');
@@ -81,13 +82,15 @@
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                
+
                 if (audio.paused) {
                     playMusic();
                 } else {
                     pauseMusic();
                 }
-            }, { passive: false });
+            }, {
+                passive: false
+            });
         });
 
         // Attempt autoplay on load
@@ -98,7 +101,7 @@
         function playOnInteraction(e) {
             // Don't trigger if clicking on the toggle button
             if (e.target.closest('#music-toggle')) return;
-            
+
             if (!musicPlayed) {
                 playMusic();
                 document.removeEventListener('click', playOnInteraction);
@@ -110,8 +113,12 @@
         // Add fallback only if autoplay failed (check after a short delay)
         setTimeout(() => {
             if (!musicPlayed && !interactionListenersAdded) {
-                document.addEventListener('click', playOnInteraction, { passive: true });
-                document.addEventListener('touchstart', playOnInteraction, { passive: true });
+                document.addEventListener('click', playOnInteraction, {
+                    passive: true
+                });
+                document.addEventListener('touchstart', playOnInteraction, {
+                    passive: true
+                });
                 interactionListenersAdded = true;
                 console.log('Fallback interaction listeners added');
             }
@@ -141,20 +148,46 @@
         const windowHeight = window.innerHeight;
 
         if (windowWidth <= 480) {
+            // Mobile: smaller, more compact
             return {
-                width: Math.min(windowWidth - 20, 400),
-                height: Math.min(windowHeight * 0.8, 600)
+                width: Math.min(windowWidth - 20, 350),
+                height: Math.min(windowHeight * 0.9, 500)
             };
         } else if (windowWidth <= 768) {
+            // Tablet: medium size
             return {
                 width: Math.min(windowWidth - 40, 500),
-                height: Math.min(windowHeight * 0.75, 650)
+                height: Math.min(windowHeight * 0.85, 650)
             };
         } else {
+            // Desktop: larger, but not too big
             return {
-                width: Math.min(windowWidth * 0.8, 800),
-                height: Math.min(windowHeight * 0.85, 900)
+                width: Math.min(windowWidth * 0.6, 700),
+                height: Math.min(windowHeight * 0.8, 900)
             };
+        }
+    }
+
+    function preventPageScroll() {
+        // Prevent page scrolling when interacting with flipbook
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+
+        // Prevent touch scrolling on mobile
+        document.addEventListener('touchmove', preventTouchScroll, {
+            passive: false
+        });
+    }
+
+    function allowPageScroll() {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.removeEventListener('touchmove', preventTouchScroll);
+    }
+
+    function preventTouchScroll(e) {
+        if (e.target.closest('.st-pageflip')) {
+            e.preventDefault();
         }
     }
 
@@ -237,15 +270,19 @@
 
         if (isMobile) {
             config.size = "stretch";
-            config.minWidth = 315;
-            config.maxWidth = 1000;
-            config.minHeight = 420;
-            config.maxHeight = 1350;
+            config.minWidth = 280;
+            config.maxWidth = 600;
+            config.minHeight = 400;
+            config.maxHeight = 800;
         }
 
         try {
             const pageFlip = new St.PageFlip(flipbookElement, config);
             pageFlip.loadFromHTML(flipbookPages);
+
+            // Prevent page scrolling
+            preventPageScroll();
+
             return pageFlip;
         } catch (error) {
             console.error('Error initializing PageFlip:', error);
@@ -257,27 +294,41 @@
             fixInteractiveElements();
         }, 200);
 
+        // Special handling for RSVP form elements
         const rsvpForm = document.getElementById('rsvp-form');
         if (rsvpForm) {
-            rsvpForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            const formElements = rsvpForm.querySelectorAll('input, select, textarea, button');
+            formElements.forEach(element => {
+                element.style.pointerEvents = 'auto';
+                element.style.zIndex = '9999';
 
-                const attendance = document.querySelector('input[name="attendance"]:checked');
-                const guestCount = document.getElementById('guest-count');
-                const message = document.getElementById('message');
+                // Prevent flipbook events on form interactions
+                ['click', 'touchstart', 'touchmove', 'mousedown', 'mouseup', 'change', 'input', 'focus', 'blur'].forEach(eventType => {
+                    element.addEventListener(eventType, function(e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                    }, {
+                        passive: false
+                    });
+                });
+            });
 
-                if (!attendance) {
-                    alert('Mohon pilih status kehadiran');
-                    return;
-                }
+            // Special handling for pagination buttons
+            const paginationButtons = document.querySelectorAll('#pagination button');
+            paginationButtons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+                button.style.zIndex = '9999';
 
-                alert('Terima kasih! Konfirmasi kehadiran Anda telah berhasil dikirim.');
-
-                setTimeout(function() {
-                    pageFlip.flipNext();
-                }, 1000);
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                }, {
+                    passive: false
+                });
             });
         }
+
+
 
         return pageFlip;
     }
@@ -294,31 +345,92 @@
         }));
     }
 
+    // Swipe instruction function
+    function initSwipeInstruction(pageFlip) {
+        let instructionTimeout;
+        let instructionElement;
+
+        function showSwipeInstruction() {
+            // Remove existing instruction if any
+            if (instructionElement) {
+                instructionElement.remove();
+            }
+
+            // Create instruction element
+            instructionElement = document.createElement('div');
+            instructionElement.className = 'fixed top-4 right-4 bg-black/80 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium z-50 animate-pulse';
+            instructionElement.innerHTML = '👆 Swipe left/right to navigate pages';
+            instructionElement.style.animation = 'pulse 2s infinite';
+
+            document.body.appendChild(instructionElement);
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                if (instructionElement) {
+                    instructionElement.style.transition = 'opacity 0.5s ease-out';
+                    instructionElement.style.opacity = '0';
+                    setTimeout(() => {
+                        if (instructionElement) {
+                            instructionElement.remove();
+                            instructionElement = null;
+                        }
+                    }, 500);
+                }
+            }, 5000);
+        }
+
+        function resetTimer() {
+            clearTimeout(instructionTimeout);
+            instructionTimeout = setTimeout(() => {
+                // Only show if user hasn't interacted with flipbook yet
+                if (pageFlip && pageFlip.getCurrentPageIndex() === 0) {
+                    showSwipeInstruction();
+                }
+            }, 10000); // Show after 10 seconds of inactivity
+        }
+
+        // Start timer on page load
+        resetTimer();
+
+        // Reset timer on any user interaction
+        ['click', 'touchstart', 'touchmove', 'keydown', 'scroll'].forEach(event => {
+            document.addEventListener(event, resetTimer, {
+                passive: true
+            });
+        });
+
+        // Reset timer when page changes
+        if (pageFlip) {
+            pageFlip.on('flip', resetTimer);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Ensure classList support first
         ensureClassListSupport();
 
         // Collect all image URLs to preload
         const imagesToPreload = [
-            @if($settings && $settings->cover_photo)
+            @if($settings && $settings -> cover_photo)
             "{{ Storage::url($settings->cover_photo) }}",
             @endif
-            @if($wedding->bride_photo)
+            @if($wedding -> bride_photo)
             "{{ Storage::url($wedding->bride_photo) }}",
             @endif
-            @if($wedding->groom_photo)
+            @if($wedding -> groom_photo)
             "{{ Storage::url($wedding->groom_photo) }}",
             @endif
             @foreach($galleries as $gallery)
-            @if($gallery->file_path)
+            @if($gallery -> file_path)
             "{{ asset('storage/' . $gallery->file_path) }}",
             @endif
             @endforeach
-            @if(!$settings || !$settings->cover_photo)
+            @if(!$settings || !$settings -> cover_photo)
             "{{ asset('images/bride.jpg') }}",
             "{{ asset('images/groom.jpg') }}",
             @endif
         ].filter(url => url); // Remove empty strings
+
 
         // Initialize music controls
         initMusic();
@@ -340,10 +452,13 @@
             // Initialize PageFlip after preloading
             let pageFlip = initPageFlip();
 
+            initSwipeInstruction(pageFlip);
+
             if (!pageFlip) {
                 console.warn('PageFlip initialization failed, retrying...');
                 setTimeout(() => {
                     pageFlip = initPageFlip();
+                    initSwipeInstruction(pageFlip);
                 }, 500);
             }
 
@@ -351,6 +466,7 @@
                 if (pageFlip && typeof pageFlip.destroy === 'function') {
                     try {
                         pageFlip.destroy();
+                        allowPageScroll();
                     } catch (error) {
                         console.error('Error destroying PageFlip:', error);
                     }
@@ -358,6 +474,7 @@
 
                 setTimeout(() => {
                     pageFlip = initPageFlip();
+                    initSwipeInstruction(pageFlip);
                 }, 100);
             });
 
@@ -371,6 +488,8 @@
 
             // Initialize PageFlip anyway
             let pageFlip = initPageFlip();
+
+            initSwipeInstruction(pageFlip);
         });
     });
 </script>

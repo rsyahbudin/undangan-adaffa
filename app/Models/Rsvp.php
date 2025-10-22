@@ -12,6 +12,7 @@ class Rsvp extends Model
     protected $fillable = [
         'guest_id',
         'is_attending',
+        'attending_count',
         'message'
     ];
 

@@ -11,9 +11,12 @@ const Flipbook: React.FC<FlipbookProps> = ({ pages }) => {
     useEffect(() => {
         if (!flipbookRef.current) return;
 
+        const isMobile = window.innerWidth <= 768;
+        const isDesktop = window.innerWidth > 768;
+
         const pageFlip = new PageFlip(flipbookRef.current, {
-            width: 400,
-            height: 300,
+            width: isMobile ? 350 : isDesktop ? 700 : 500,
+            height: isMobile ? 500 : isDesktop ? 900 : 650,
             drawShadow: true,
             flippingTime: 700,
         });

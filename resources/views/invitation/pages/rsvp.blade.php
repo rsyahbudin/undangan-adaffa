@@ -16,9 +16,11 @@
         style="pointer-events:auto; height:100%;">
 
         <!-- Title -->
-        <h2 class="text-xl md:text-4xl font-extrabold tracking-wide uppercase mt-1"
-            style="font-family: 'Playfair Display', serif;">RSVP</h2>
-        <div class="w-16 md:w-24 h-0.5 bg-black mx-auto mb-2 md:mb-4"></div>
+        <h1 class="text-lg md:text-3xl lg:text-4xl font-extrabold tracking-wide uppercase mb-3 md:mb-4"
+                style="font-family: 'Playfair Display', serif;">
+                RSVP
+            </h1>
+            <div class="w-16 md:w-20 lg:w-24 h-0.5 bg-black mx-auto mb-3 md:mb-4"></div>
 
         <!-- Description -->
         <p

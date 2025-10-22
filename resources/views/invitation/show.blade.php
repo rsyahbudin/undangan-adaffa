@@ -3,7 +3,7 @@
 @section('title', 'Invitation Wedding Daffa & Nadia for ' . $guest->name)
 
 @section('content')
-<div id="flipbook-container" class="w-full h-screen flex justify-center items-center p-5 box-border bg-black relative">
+<div id="flipbook-container" class="w-full min-h-screen flex justify-center items-center p-2 sm:p-4 md:p-5 bg-black relative overflow-hidden">
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-black z-50 flex items-center justify-center opacity-100 transition-opacity duration-500">
         <div class="text-center text-white">
