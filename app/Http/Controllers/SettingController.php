@@ -75,6 +75,13 @@ class SettingController extends Controller
         return back()->with('success', 'Pengaturan berhasil diperbarui.');
     }
 
+
+    public function getSettings($wedding_id)
+    {
+        $settings = Setting::where('wedding_id', $wedding_id)->get();
+        return response()->json($settings);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

@@ -35,12 +35,13 @@
                 @if($gallery->video_url)
                 <iframe src="{{ $gallery->video_url }}"
                     class="w-full h-48 md:h-52 object-cover rounded-lg pointer-events-auto"
-                    allowfullscreen loading="lazy"></iframe>
+                    allowfullscreen loading="eager"></iframe>
                 @else
                 <img src="{{ asset('storage/' . $gallery->file_path) }}"
                     alt="Wedding Gallery"
-                    loading="lazy"
-                    class="w-full h-48 md:h-56 object-cover group-hover:scale-110 transition-transform duration-700 ease-out pointer-events-auto">
+                    loading="eager"
+                    class="w-full h-48 md:h-56 object-cover group-hover:scale-110 transition-transform duration-700 ease-out pointer-events-auto"
+                    style="will-change: transform;">
                 @endif
             </div>
             @endforeach
@@ -54,11 +55,12 @@
                     <div class="swiper-slide">
                         <img src="{{ asset('storage/' . $gallery->file_path) }}"
                             alt="Gallery Image"
-                            loading="lazy"
+                            loading="eager"
                             class="w-full h-72 object-cover rounded-xl shadow-md cursor-pointer pointer-events-auto"
                             @click.stop="activeImage = '{{ asset('storage/' . $gallery->file_path) }}'"
                             @touchstart.stop
-                            @touchmove.stop>
+                            @touchmove.stop
+                            style="will-change: transform;">
                     </div>
                     @endforeach
                 </div>
@@ -116,6 +118,8 @@
 
 <!-- ✅ Swiper Init Script -->
 <script>
+    
+
     document.addEventListener('DOMContentLoaded', () => {
         // Swiper init
         new Swiper(".myGallery", {

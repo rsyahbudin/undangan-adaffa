@@ -33,6 +33,106 @@
             }
         });
     }
+
+    // Music autoplay handling with fallback
+    let musicPlayed = false;
+    let interactionListenersAdded = false;
+    function initMusic() {
+        const audio = document.getElementById('background-music');
+        const toggleButton = document.getElementById('music-toggle');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        if (!audio || !toggleButton || !playIcon || !pauseIcon) return;
+
+        // Set initial icon states
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+
+        // Function to play music
+        function playMusic() {
+            audio.play().then(() => {
+                musicPlayed = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                console.log('Music started playing');
+                // Remove fallback listeners if they exist
+                if (interactionListenersAdded) {
+                    document.removeEventListener('click', playOnInteraction);
+                    document.removeEventListener('touchstart', playOnInteraction);
+                    interactionListenersAdded = false;
+                }
+            }).catch(error => {
+                console.log('Play failed, waiting for user interaction:', error);
+            });
+        }
+
+        // Function to pause music
+        function pauseMusic() {
+            audio.pause();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        }
+
+        // Toggle button events with comprehensive event prevention
+        const toggleEvents = ['click', 'touchstart', 'touchend', 'mousedown', 'mouseup'];
+        toggleEvents.forEach(eventType => {
+            toggleButton.addEventListener(eventType, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                if (audio.paused) {
+                    playMusic();
+                } else {
+                    pauseMusic();
+                }
+            }, { passive: false });
+        });
+
+        // Attempt autoplay on load
+        audio.volume = 0.5;
+        playMusic();
+
+        // Fallback: Play on first user interaction anywhere on the page (excluding button)
+        function playOnInteraction(e) {
+            // Don't trigger if clicking on the toggle button
+            if (e.target.closest('#music-toggle')) return;
+            
+            if (!musicPlayed) {
+                playMusic();
+                document.removeEventListener('click', playOnInteraction);
+                document.removeEventListener('touchstart', playOnInteraction);
+                interactionListenersAdded = false;
+            }
+        }
+
+        // Add fallback only if autoplay failed (check after a short delay)
+        setTimeout(() => {
+            if (!musicPlayed && !interactionListenersAdded) {
+                document.addEventListener('click', playOnInteraction, { passive: true });
+                document.addEventListener('touchstart', playOnInteraction, { passive: true });
+                interactionListenersAdded = true;
+                console.log('Fallback interaction listeners added');
+            }
+        }, 100);
+
+        // Update button state when audio state changes
+        audio.addEventListener('play', () => {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        });
+
+        audio.addEventListener('pause', () => {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        });
+
+        // Handle audio ended event
+        audio.addEventListener('ended', () => {
+            pauseMusic();
+        });
+    }
 </script>
 
 <script>
@@ -182,12 +282,62 @@
         return pageFlip;
     }
 
+    // Image Preloader Function
+    function preloadImages(imageUrls) {
+        return Promise.all(imageUrls.map(url => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(url);
+                img.onerror = () => reject(url);
+                img.src = url;
+            });
+        }));
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Ensure classList support first
         ensureClassListSupport();
 
-        // Wait a bit for all elements to be loaded
-        setTimeout(() => {
+        // Collect all image URLs to preload
+        const imagesToPreload = [
+            @if($settings && $settings->cover_photo)
+            "{{ Storage::url($settings->cover_photo) }}",
+            @endif
+            @if($wedding->bride_photo)
+            "{{ Storage::url($wedding->bride_photo) }}",
+            @endif
+            @if($wedding->groom_photo)
+            "{{ Storage::url($wedding->groom_photo) }}",
+            @endif
+            @foreach($galleries as $gallery)
+            @if($gallery->file_path)
+            "{{ asset('storage/' . $gallery->file_path) }}",
+            @endif
+            @endforeach
+            @if(!$settings || !$settings->cover_photo)
+            "{{ asset('images/bride.jpg') }}",
+            "{{ asset('images/groom.jpg') }}",
+            @endif
+        ].filter(url => url); // Remove empty strings
+
+        // Initialize music controls
+        initMusic();
+
+        // Preload images and initialize everything
+        preloadImages(imagesToPreload).then(() => {
+            console.log('All images preloaded successfully');
+
+            // Hide loading overlay with fade effect
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.transition = 'opacity 0.5s ease-out';
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }
+
+            // Initialize PageFlip after preloading
             let pageFlip = initPageFlip();
 
             if (!pageFlip) {
@@ -210,7 +360,18 @@
                     pageFlip = initPageFlip();
                 }, 100);
             });
-        }, 100);
+
+        }).catch(error => {
+            console.error('Error preloading images:', error);
+            // Still initialize even if some images fail
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+            }
+
+            // Initialize PageFlip anyway
+            let pageFlip = initPageFlip();
+        });
     });
 </script>
 @endpush
