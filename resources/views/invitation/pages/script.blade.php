@@ -73,9 +73,11 @@
             audio.pause();
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
+            console.log('Music paused');
         }
 
         // Toggle button events with comprehensive event prevention
+        let isProcessingToggle = false;
         const toggleEvents = ['click', 'touchstart', 'touchend', 'mousedown', 'mouseup'];
         toggleEvents.forEach(eventType => {
             toggleButton.addEventListener(eventType, (e) => {
@@ -83,11 +85,21 @@
                 e.stopPropagation();
                 e.stopImmediatePropagation();
 
-                if (audio.paused) {
+                // Prevent multiple rapid clicks
+                if (isProcessingToggle) return;
+                isProcessingToggle = true;
+
+                // Force state check to ensure proper toggle
+                if (audio.paused || audio.currentTime === 0) {
                     playMusic();
                 } else {
                     pauseMusic();
                 }
+
+                // Reset processing flag after a short delay
+                setTimeout(() => {
+                    isProcessingToggle = false;
+                }, 200);
             }, {
                 passive: false
             });
@@ -128,11 +140,13 @@
         audio.addEventListener('play', () => {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
+            console.log('Audio play event triggered');
         });
 
         audio.addEventListener('pause', () => {
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
+            console.log('Audio pause event triggered');
         });
 
         // Handle audio ended event

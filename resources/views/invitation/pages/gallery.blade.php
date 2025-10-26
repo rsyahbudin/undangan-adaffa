@@ -29,7 +29,7 @@
 
                 {{-- ✅ Desktop Grid --}}
                 <div class="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 select-none">
-                    @foreach($galleries as $gallery)
+                    @foreach($galleries->skip(1) as $gallery)
                     @if($gallery->file_path)
                     <div
                         class="relative bg-white/70 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-500 group cursor-pointer interactive-zone"
@@ -51,7 +51,7 @@
                 <div class="sm:hidden relative w-full">
                     <div class="swiper myGallery interactive-zone" style="touch-action: pan-y;">
                         <div class="swiper-wrapper">
-                            @foreach($galleries as $gallery)
+                            @foreach($galleries->skip(1) as $gallery)
                             @if($gallery->file_path)
                             <div class="swiper-slide">
                                 <img src="{{ asset('storage/' . $gallery->file_path) }}"
