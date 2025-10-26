@@ -58,11 +58,6 @@
                     loading="lazy">
                 </iframe>
 
-                <!-- Dekorasi titik lembut -->
-                <div class="absolute top-1 left-1 w-1.5 h-1.5 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
-                <div class="absolute top-1 right-1 w-1 h-1 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
-                <div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
-                <div class="absolute bottom-1 right-1 w-1 h-1 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
             </div>
             @else
             <div class="w-full aspect-video rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-lg border border-gray-200">

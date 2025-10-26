@@ -357,24 +357,19 @@
                 instructionElement.remove();
             }
 
-            // Create instruction element with better visibility
+            // Create instruction element with monochrome design
             instructionElement = document.createElement('div');
-            instructionElement.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-full text-sm md:text-base font-semibold z-50 shadow-lg border-2 border-white/20';
-            instructionElement.innerHTML = '👆 Swipe left/right to navigate pages';
-            instructionElement.style.animation = 'bounce 1s infinite, fadeIn 0.5s ease-out';
-            instructionElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            instructionElement.className = 'fixed top-4 right-4 bg-gray-800 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium z-50 shadow-lg border border-gray-600';
+            instructionElement.innerHTML = '↔️ Swipe to navigate';
+            instructionElement.style.animation = 'fadeIn 0.5s ease-out';
+            instructionElement.style.boxShadow = '0 2px 8px rgba(0,0,0,0.4)';
 
             // Add CSS animations
             const style = document.createElement('style');
             style.innerHTML = `
-                @keyframes bounce {
-                    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-                    40% { transform: translateX(-50%) translateY(-10px); }
-                    60% { transform: translateX(-50%) translateY(-5px); }
-                }
                 @keyframes fadeIn {
-                    from { opacity: 0; transform: translateX(-50%) scale(0.8); }
-                    to { opacity: 1; transform: translateX(-50%) scale(1); }
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
             `;
             document.head.appendChild(style);

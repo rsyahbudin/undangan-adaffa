@@ -53,7 +53,7 @@
             </form>
 
             <!-- Messages Scrollable Section -->
-            <div class="flex flex-col w-full max-w-[300px] md:max-w-md flex-1 overflow-hidden mt-3 md:mt-4">
+            <div class="flex flex-col w-full max-w-[300px] md:max-w-md flex-1 overflow-hidden mt-3 md:mt-4 z-10">
                 <div id="messages-container"
                     class="flex-1 overflow-y-auto overscroll-contain space-y-2 pr-1 md:pr-2 pb-2 md:pb-3
            max-h-[180px] md:max-h-[240px]">
