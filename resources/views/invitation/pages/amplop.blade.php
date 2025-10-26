@@ -10,9 +10,9 @@
 
         <!-- Title -->
         <h1 class="text-lg md:text-3xl lg:text-4xl font-extrabold tracking-wide uppercase mb-3 md:mb-4"
-                style="font-family: 'Playfair Display', serif;">
-                Digital Envelope
-            </h1>
+            style="font-family: 'Playfair Display', serif;">
+            Digital Envelope
+        </h1>
         <div class="w-16 md:w-20 lg:w-24 h-0.5 bg-black mx-auto mb-2 md:mb-3 lg:mb-4"></div>
 
         <!-- Description -->
@@ -21,21 +21,24 @@
         </p>
 
         <!-- Cards Container -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 lg:gap-4 w-full max-w-xs md:max-w-xl lg:max-w-2xl mx-auto mb-4 md:mb-5 lg:mb-6">
+        <div class="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-5 lg:gap-6 w-full max-w-sm md:max-w-2xl lg:max-w-3xl mx-auto mb-4 md:mb-5 lg:mb-6">
             <!-- BCA Card -->
             <div
-                class="relative bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-xl p-2 md:p-3 lg:p-4 shadow-md flex flex-col justify-between min-h-[100px] md:min-h-[100px] lg:min-h-[120px]">
-                <div class="flex justify-between items-center mb-1">
-                    <h2 class="text-base md:text-base lg:text-lg font-bold">BCA Bank</h2>
+                class="relative bg-white border-2 border-blue-200 text-gray-900 rounded-2xl p-2 md:p-3 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[100px] md:min-h-[110px] lg:min-h-[120px]">
+                <div class="flex justify-between items-center mb-1.5">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                        <h2 class="text-sm md:text-base lg:text-lg font-bold">BCA</h2>
+                    </div>
                 </div>
-                <div class="text-left leading-tight">
-                    <p class="text-sm md:text-sm lg:text-sm opacity-80">Account Number</p>
-                    <p id="bcaNumber" class="text-base md:text-base lg:text-xl font-semibold tracking-widest">5379413117718038</p>
+                <div class="text-left leading-tight flex-1">
+                    <p class="text-xs md:text-sm lg:text-sm text-gray-600 mb-0.5">Account Number</p>
+                    <p id="bcaNumber" class="text-sm md:text-base lg:text-lg font-bold tracking-widest text-gray-900">5379413117718038</p>
                 </div>
-                <div class="flex justify-between items-center mt-1">
-                    <p class="text-sm md:text-sm lg:text-sm">Nadia Ariandyen</p>
+                <div class="flex justify-between items-center mt-2">
+                    <p class="text-xs md:text-sm lg:text-sm font-medium text-gray-700">Nadia Ariandyen</p>
                     <button onclick="copyToClipboard('bcaNumber')"
-                        class="px-1 py-0.5 text-sm md:text-sm lg:text-sm bg-white/20 hover:bg-white/30 rounded-lg transition-all">
+                        class="px-2 py-1 text-xs md:text-sm lg:text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all font-medium">
                         Copy
                     </button>
                 </div>
@@ -43,18 +46,21 @@
 
             <!-- Mandiri Card -->
             <div
-                class="relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 text-gray-900 rounded-xl p-2 md:p-3 lg:p-4 shadow-md flex flex-col justify-between min-h-[100px] md:min-h-[100px] lg:min-h-[120px]">
-                <div class="flex justify-between items-center mb-1">
-                    <h2 class="text-base md:text-base lg:text-lg font-bold">Mandiri Bank</h2>
+                class="relative bg-white border-2 border-yellow-200 text-gray-900 rounded-2xl p-2 md:p-3 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[100px] md:min-h-[110px] lg:min-h-[120px]">
+                <div class="flex justify-between items-center mb-1.5">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-2.5 h-2.5 bg-yellow-500 rounded-full"></div>
+                        <h2 class="text-sm md:text-base lg:text-lg font-bold">Mandiri</h2>
+                    </div>
                 </div>
-                <div class="text-left leading-tight">
-                    <p class="text-sm md:text-sm lg:text-sm opacity-80">Account Number</p>
-                    <p id="mandiriNumber" class="text-base md:text-sm lg:text-xl font-semibold tracking-widest">1290013566860</p>
+                <div class="text-left leading-tight flex-1">
+                    <p class="text-xs md:text-sm lg:text-sm text-gray-600 mb-0.5">Account Number</p>
+                    <p id="mandiriNumber" class="text-sm md:text-base lg:text-lg font-bold tracking-widest text-gray-900">1290013566860</p>
                 </div>
-                <div class="flex justify-between items-center mt-1">
-                    <p class="text-sm md:text-sm lg:text-sm">Muhammad Daffa Syahbudin</p>
+                <div class="flex justify-between items-center mt-2">
+                    <p class="text-xs md:text-sm lg:text-sm font-medium text-gray-700">Muhammad Daffa Syahbudin</p>
                     <button onclick="copyToClipboard('mandiriNumber')"
-                        class="px-1 py-0.5 text-sm md:text-sm lg:text-sm bg-black/10 hover:bg-black/20 rounded-lg transition-all">
+                        class="px-2 py-1 text-xs md:text-sm lg:text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded-md transition-all font-medium">
                         Copy
                     </button>
                 </div>
@@ -62,14 +68,18 @@
 
             <!-- Physical Address Card -->
             <div
-                class="relative bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 rounded-xl p-2 md:p-3 lg:p-4 shadow-md flex flex-col justify-center items-center text-center min-h-[90px] md:min-h-[100px] lg:min-h-[120px] md:col-span-2">
+                class="relative bg-white border-2 border-gray-200 text-gray-900 rounded-2xl p-2 md:p-3 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-center items-center text-center min-h-[100px] md:min-h-[110px] lg:min-h-[120px]">
                 <div class="mb-1">
-                    <h2 class="text-base md:text-base lg:text-lg font-bold">Physical Address</h2>
+                    <div class="flex items-center justify-center gap-1.5 mb-1.5">
+                        <div class="w-2.5 h-2.5 bg-gray-500 rounded-full"></div>
+                        <h2 class="text-sm md:text-base lg:text-lg font-bold">Address</h2>
+                    </div>
                 </div>
-                <div class="leading-tight">
-                    <p class="text-sm md:text-sm lg:text-base font-semibold">Daffa Syahbudin</p>
-                    <p class="text-sm md:text-sm lg:text-base text-gray-700 mt-0.5">Jl. Abdulrahman No 12 RT 16/05 Cibubur (Rumah Syahbudin)</p>
-                    <p class="text-sm md:text-sm lg:text-base text-gray-700 mt-0.5">+62 878-7850-3378</p>
+                <div class="leading-tight text-center">
+                    <p class="text-sm md:text-base lg:text-lg font-bold text-gray-900 mb-0.5">Daffa Syahbudin</p>
+                    <p class="text-xs md:text-sm lg:text-base text-gray-700">Jl. Abdulrahman No 12 RT 16/05</p>
+                    <p class="text-xs md:text-sm lg:text-base text-gray-700">Cibubur (Rumah Syahbudin)</p>
+                    <p class="text-xs md:text-sm lg:text-base text-gray-700 font-medium mt-0.5">+62 878-7850-3378</p>
                 </div>
             </div>
         </div>

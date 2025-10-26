@@ -39,9 +39,8 @@ class GalleryResource extends Resource
                     ->visibility('public'),
 
                 Forms\Components\TextInput::make('video_url')
-                    ->label('Link YouTube')
-                    ->url()
-                    ->placeholder('https://youtube.com/...'),
+                    ->label('Link / ID Video')
+                    ->placeholder('vx123s'),
             ]);
     }
 

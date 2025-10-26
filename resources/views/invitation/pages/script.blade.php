@@ -349,6 +349,7 @@
     function initSwipeInstruction(pageFlip) {
         let instructionTimeout;
         let instructionElement;
+        let hasInteracted = false;
 
         function showSwipeInstruction() {
             // Remove existing instruction if any
@@ -356,52 +357,84 @@
                 instructionElement.remove();
             }
 
-            // Create instruction element
+            // Create instruction element with better visibility
             instructionElement = document.createElement('div');
-            instructionElement.className = 'fixed top-4 right-4 bg-black/80 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium z-50 animate-pulse';
+            instructionElement.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-full text-sm md:text-base font-semibold z-50 shadow-lg border-2 border-white/20';
             instructionElement.innerHTML = '👆 Swipe left/right to navigate pages';
-            instructionElement.style.animation = 'pulse 2s infinite';
+            instructionElement.style.animation = 'bounce 1s infinite, fadeIn 0.5s ease-out';
+            instructionElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes bounce {
+                    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+                    40% { transform: translateX(-50%) translateY(-10px); }
+                    60% { transform: translateX(-50%) translateY(-5px); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateX(-50%) scale(0.8); }
+                    to { opacity: 1; transform: translateX(-50%) scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
 
             document.body.appendChild(instructionElement);
 
-            // Auto-hide after 5 seconds
+            // Auto-hide after 8 seconds
             setTimeout(() => {
                 if (instructionElement) {
-                    instructionElement.style.transition = 'opacity 0.5s ease-out';
+                    instructionElement.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
                     instructionElement.style.opacity = '0';
+                    instructionElement.style.transform = 'translateX(-50%) scale(0.8)';
                     setTimeout(() => {
                         if (instructionElement) {
                             instructionElement.remove();
                             instructionElement = null;
                         }
-                    }, 500);
+                    }, 800);
                 }
-            }, 5000);
+            }, 8000);
         }
 
         function resetTimer() {
             clearTimeout(instructionTimeout);
-            instructionTimeout = setTimeout(() => {
-                // Only show if user hasn't interacted with flipbook yet
-                if (pageFlip && pageFlip.getCurrentPageIndex() === 0) {
+            if (!hasInteracted) {
+                instructionTimeout = setTimeout(() => {
+                    // Show instruction immediately after load if no interaction
                     showSwipeInstruction();
-                }
-            }, 10000); // Show after 10 seconds of inactivity
+                }, 100); // Show immediately after load
+            }
+        }
+
+        function markAsInteracted() {
+            hasInteracted = true;
+            clearTimeout(instructionTimeout);
+            if (instructionElement) {
+                instructionElement.style.transition = 'opacity 0.5s ease-out';
+                instructionElement.style.opacity = '0';
+                setTimeout(() => {
+                    if (instructionElement) {
+                        instructionElement.remove();
+                        instructionElement = null;
+                    }
+                }, 500);
+            }
         }
 
         // Start timer on page load
         resetTimer();
 
-        // Reset timer on any user interaction
+        // Mark as interacted on any user interaction
         ['click', 'touchstart', 'touchmove', 'keydown', 'scroll'].forEach(event => {
-            document.addEventListener(event, resetTimer, {
+            document.addEventListener(event, markAsInteracted, {
                 passive: true
             });
         });
 
-        // Reset timer when page changes
+        // Mark as interacted when page changes
         if (pageFlip) {
-            pageFlip.on('flip', resetTimer);
+            pageFlip.on('flip', markAsInteracted);
         }
     }
 

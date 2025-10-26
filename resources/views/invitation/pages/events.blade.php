@@ -22,7 +22,7 @@
             <!-- <div class="flex-1 overflow-y-auto px-3 md:px-4 lg:px-6 py-2 md:py-3 lg:py-4 space-y-2 md:space-y-3 lg:space-y-4"> -->
 
             <!-- Wedding Ceremony -->
-            <div class="bg-white/90 border border-gray-100 p-3 md:p-3 lg:p-4 rounded-lg shadow-sm hover:shadow-md transition">
+            <div class="bg-white/90 border border-gray-100 p-3 md:p-3 lg:p-3 rounded-lg shadow-sm hover:shadow-md transition">
                 <h3 class="text-sm md:text-sm lg:text-lg text-amber-900 mb-1 font-semibold uppercase tracking-wide"
                     style="font-family: 'Playfair Display', serif;">💍 Wedding Ceremony</h3>
                 <p class="text-xs md:text-xs lg:text-sm text-gray-700 leading-relaxed text-center">
@@ -34,7 +34,7 @@
 
             <!-- First Reception -->
             @if($guest->session == 1 && $wedding->reception1_date)
-            <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-4 rounded-lg shadow-sm hover:shadow-md transition mt-3">
+            <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-3 rounded-lg shadow-sm hover:shadow-md transition mt-3">
                 <h3 class="text-sm md:text-sm lg:text-lg text-amber-900 mb-1 font-semibold uppercase tracking-wide"
                     style="font-family: 'Playfair Display', serif;">🎉 Wedding Reception</h3>
                 <p class="text-xs md:text-xs lg:text-sm text-gray-700 leading-relaxed text-center">
@@ -47,13 +47,14 @@
 
             <!-- Second Reception -->
             @if($guest->session == 2 && $wedding->reception2_date)
-            <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-4 rounded-lg shadow-sm hover:shadow-md transition mt-3">
+            <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-3 rounded-lg shadow-sm hover:shadow-md transition mt-3">
                 <h3 class="text-sm md:text-sm lg:text-lg text-amber-900 mb-1 font-semibold uppercase tracking-wide"
                     style="font-family: 'Playfair Display', serif;">🎊 Wedding Reception</h3>
                 <p class="text-xs md:text-xs lg:text-sm text-gray-700 leading-relaxed text-center">
                     <strong>Date:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_date)->isoFormat('dddd, MMMM D, YYYY') }}<br>
                     <strong>Time:</strong> {{ \Carbon\Carbon::parse($wedding->reception2_start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($wedding->reception2_end_time)->format('H:i') }} WIB<br>
-                    <strong>Venue:</strong> {{ $wedding->reception2_place }}
+                    <strong>Venue:</strong> {{ $wedding->reception2_place }}<br>
+                    <strong>Dresscode:</strong> Batik
                 </p>
             </div>
             @endif
@@ -67,7 +68,7 @@
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2367761350256!2d106.87861207540507!3d-6.363394962251041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ed302dffac99%3A0x5865ecdaf645cf7f!2sTeras%20Rumah%20Nenek!5e0!3m2!1sen!2sid!4v1760536461758!5m2!1sen!2sid"
                         style="border:0;"
                         allowfullscreen=""
-                        loading="lazy"
+                        loading="eager"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>

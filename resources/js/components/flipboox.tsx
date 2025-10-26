@@ -18,11 +18,17 @@ const Flipbook: React.FC<FlipbookProps> = ({ pages }) => {
             width: isMobile ? 350 : isDesktop ? 700 : 500,
             height: isMobile ? 500 : isDesktop ? 900 : 650,
             drawShadow: true,
-            flippingTime: 700,
+            flippingTime: isMobile ? 500 : 700,
+            useTouchEvents: isMobile,
+            mobileScrollSupport: isMobile,
+            usePortrait: isMobile,
+            swipeDistance: isMobile ? 10 : 30, // Reduce swipe distance for easier flipping on mobile
+            clickEventForward: true, // Allow clicking to flip on mobile
+            showCover: false,
         });
 
         // buat halaman dari props
-        const pageElements = pages.map((content, index) => {
+        const pageElements = pages.map((content) => {
             const div = document.createElement('div');
             div.className = 'page';
             div.innerHTML = content;

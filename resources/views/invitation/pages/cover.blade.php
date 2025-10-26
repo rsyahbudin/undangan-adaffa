@@ -1,7 +1,7 @@
 <!-- Cover Page - Newspaper Style -->
 <div class="flipbook-page newspaper-page text-black relative overflow-hidden h-full flex flex-col bg-white">
     <!-- Newspaper Header -->
-    <div class="newspaper-cover text-black flex flex-col justify-between h-full px-3 md:px-6 py-4 md:py-6" data-density="hard">
+    <div class="newspaper-cover text-black flex flex-col justify-between h-full px-6 md:px-8 py-6 md:py-8" data-density="hard">
         <!-- Header -->
         <div class="text-center border-b-2 border-black pb-2 mb-2">
             <h1 class="text-xl md:text-4xl lg:text-5xl font-extrabold tracking-widest leading-tight">

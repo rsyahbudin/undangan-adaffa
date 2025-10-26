@@ -24,41 +24,50 @@
                 "We would like to express our deepest gratitude for your presence and the heartfelt prayers you have given. Your attendance is a true joy and honor for us."
             </p>
             <p class="text-[9px] md:text-xs lg:text-sm text-gray-500 italic">
-                — With all our love
+                — {{ $wedding->bride_name }} & {{ $wedding->groom_name }}
             </p>
         </div>
 
         <!-- Video Section -->
-        <div class="w-full max-w-xs md:max-w-sm lg:max-w-md mx-auto mb-3 md:mb-4 lg:mb-6">
+        <div class="w-full max-w-xs md:max-w-xs lg:max-w-xs mx-auto mb-3 md:mb-4 lg:mb-6">
             @if($video = $wedding->galleries->whereNotNull('video_url')->first())
             @php
-            $videoId = null;
-            if (preg_match('/youtu\.be\/([^&#]+)/', $video->video_url, $matches)) {
-            $videoId = $matches[1];
-            } elseif (preg_match('/[\\?&]v=([^&#]+)/', $video->video_url, $matches)) {
-            $videoId = $matches[1];
+            $videoUrl = trim($video->video_url);
+            $driveId = null;
+
+            if (preg_match('/drive\.google\.com\/file\/d\/([^\/]+)/', $videoUrl, $matches)) {
+            $driveId = $matches[1];
+            } elseif (preg_match('/^[a-zA-Z0-9_-]{10,}$/', $videoUrl)) {
+            $driveId = $videoUrl;
             }
+
+            $embedUrl = $driveId ? "https://drive.google.com/file/d/{$driveId}/preview" : null;
             @endphp
 
-            @if($videoId)
-            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-xl border border-white/50 bg-gradient-to-br from-white/80 to-white/40 backdrop-blur-sm">
+            @if($embedUrl)
+            <div
+                class="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-xl border border-white/50
+                       bg-gradient-to-br from-white/80 to-white/40 backdrop-blur-sm
+                       max-h-[50vh] mx-auto">
                 <iframe
                     class="w-full h-full rounded-lg"
-                    src="https://www.youtube.com/embed/{{ $videoId }}?rel=0&modestbranding=1&showinfo=0"
-                    title="Prewedding Video"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    src="{{ $embedUrl }}"
+                    title="Wedding Video"
+                    allow="autoplay; fullscreen; picture-in-picture"
                     allowfullscreen
-                    loading="lazy"></iframe>
-                <!-- Video overlay decoration -->
-                <div class="absolute top-1 md:top-2 left-1 md:left-2 w-1.5 md:w-2 lg:w-3 h-1.5 md:h-2 lg:h-3 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
-                <div class="absolute top-1 md:top-2 right-1 md:right-2 w-1 md:w-1.5 lg:w-2 h-1 md:h-1.5 lg:h-2 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
-                <div class="absolute bottom-1 md:bottom-2 left-1 md:left-2 w-1.5 md:w-2 lg:w-2.5 h-1.5 md:h-2 lg:h-2.5 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
-                <div class="absolute bottom-1 md:bottom-2 right-1 md:right-2 w-0.5 md:w-1 lg:w-1.5 h-0.5 md:h-1 lg:h-1.5 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
+                    loading="lazy">
+                </iframe>
+
+                <!-- Dekorasi titik lembut -->
+                <div class="absolute top-1 left-1 w-1.5 h-1.5 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
+                <div class="absolute top-1 right-1 w-1 h-1 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
+                <div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full opacity-80"></div>
+                <div class="absolute bottom-1 right-1 w-1 h-1 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-80"></div>
             </div>
             @else
             <div class="w-full aspect-video rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-lg border border-gray-200">
                 <div class="text-center text-gray-500">
-                    <svg class="w-6 h-6 md:w-8 lg:w-12 h-6 md:h-8 lg:h-12 mx-auto mb-1 md:mb-2 opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-6 h-6 md:w-8 lg:w-12 mx-auto mb-1 md:mb-2 opacity-50" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
                     </svg>
                     <p class="text-[9px] md:text-xs lg:text-sm italic">Video tidak ditemukan</p>
@@ -66,9 +75,9 @@
             </div>
             @endif
             @else
-            <div class="w-full aspect-video rounded-xl bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center shadow-lg border border-pink-100">
+            <div class="w-full aspect-video rounded-xl  flex items-center justify-center shadow-lg border border-gray-100">
                 <div class="text-center text-gray-600">
-                    <svg class="w-6 h-6 md:w-8 lg:w-12 h-6 md:h-8 lg:h-12 mx-auto mb-1 md:mb-2 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-6 h-6 md:w-8 lg:w-12 mx-auto mb-1 md:mb-2 " fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
                     </svg>
                     <p class="text-[9px] md:text-xs lg:text-sm italic">Belum ada video prewedding</p>
@@ -77,12 +86,5 @@
             @endif
         </div>
 
-        <!-- Couple Names -->
-        <div class="text-center">
-            <p class="text-sm md:text-lg lg:text-xl font-bold text-gray-800 tracking-wide mb-1"
-                style="font-family: 'Playfair Display', serif; ">
-                {{ $wedding->bride_name }} & {{ $wedding->groom_name }}
-            </p>
-        </div>
     </div>
 </div>

@@ -139,6 +139,18 @@
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
+            touchRatio: 3, // Further increase touch sensitivity
+            threshold: 3, // Even lower threshold for very easy swipe detection
+            touchAngle: 60, // More angle tolerance for swipes
+            grabCursor: true, // Show grab cursor on mobile
+            preventClicks: false, // Allow clicks to work
+            preventClicksPropagation: false, // Don't prevent click propagation
+            resistance: false, // Disable resistance for smoother swipes
+            resistanceRatio: 0, // No resistance ratio
+            shortSwipes: true, // Allow short swipes
+            longSwipes: true, // Allow long swipes
+            longSwipesRatio: 0.1, // Low ratio for long swipes
+            longSwipesMs: 100, // Quick long swipe detection
         });
 
         // ✅ Matikan PageFlip event di area interaktif
