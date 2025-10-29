@@ -19,8 +19,9 @@
         Your browser does not support the audio element.
     </audio>
 
+
     <!-- Play/Pause Toggle Button -->
-    <button id="music-toggle" class="fixed bottom-4 right-4 z-40 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3 shadow-lg hover:bg-white/30 transition-all duration-300 pointer-events-auto" style="pointer-events: auto;">
+    <button id="music-toggle" class="fixed top-4 left-4 z-40 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full p-3 shadow-lg hover:bg-white/30 transition-all duration-300 pointer-events-auto" style="pointer-events: auto;">
         <svg id="play-icon" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
         </svg>
@@ -36,8 +37,8 @@
         @include('invitation.pages.events')
         @include('invitation.pages.gallery')
         @include('invitation.pages.amplop')
-        @include('invitation.pages.rsvp')
         @include('invitation.pages.thankyou')
+        @include('invitation.pages.rsvp')
     </div>
 </div>
 

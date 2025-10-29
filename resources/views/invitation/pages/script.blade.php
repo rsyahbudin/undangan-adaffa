@@ -371,12 +371,21 @@
                 instructionElement.remove();
             }
 
-            // Create instruction element with monochrome design
+            // Create instruction element with improved design
             instructionElement = document.createElement('div');
-            instructionElement.className = 'fixed top-4 right-4 bg-gray-800 text-white px-3 py-2 rounded-lg text-xs md:text-sm font-medium z-50 shadow-lg border border-gray-600';
-            instructionElement.innerHTML = '↔️ Swipe to navigate';
+            instructionElement.className = 'fixed top-4 right-4 bg-gradient-to-r from-gray-800 to-gray-700 text-white px-4 py-3 rounded-xl text-xs md:text-sm font-medium z-50 shadow-2xl border border-gray-600 backdrop-blur-sm';
+            instructionElement.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">↔️</span>
+                    <div class="flex flex-col">
+                        <span class="font-semibold">Swipe to navigate</span>
+                        <span class="text-gray-300 text-xs">or double-click edges</span>
+                    </div>
+                </div>
+            `;
             instructionElement.style.animation = 'fadeIn 0.5s ease-out';
-            instructionElement.style.boxShadow = '0 2px 8px rgba(0,0,0,0.4)';
+            instructionElement.style.boxShadow = '0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)';
+            instructionElement.style.maxWidth = '200px';
 
             // Add CSS animations
             const style = document.createElement('style');
