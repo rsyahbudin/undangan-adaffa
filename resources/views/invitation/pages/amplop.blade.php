@@ -33,7 +33,7 @@
                 </div>
                 <div class="text-left leading-tight flex-1">
                     <p class="text-xs md:text-sm lg:text-base text-gray-600 mb-0.5 md:mb-1">Account Number</p>
-                    <p id="bcaNumber" class="text-sm md:text-lg lg:text-xl font-bold tracking-widest text-gray-900">5379413117718038</p>
+                    <p id="bcaNumber" class="text-sm md:text-lg lg:text-xl font-bold tracking-widest text-gray-900">6281419037</p>
                 </div>
                 <div class="flex justify-between items-center mt-2 md:mt-3">
                     <p class="text-xs md:text-sm lg:text-base font-medium text-gray-700">Nadia Ariandyen</p>

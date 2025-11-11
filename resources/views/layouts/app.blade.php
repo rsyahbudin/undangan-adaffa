@@ -12,13 +12,13 @@
   <!-- Tailwind CSS / Vite -->
   @vite('resources/css/app.css')
 
-  <!-- StPageFlip CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/stpageflip/dist/stpageflip.min.css" />
-
-  <!-- Swiper CSS -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <!-- Optimized external CSS with preload -->
+  <link rel="preload" href="https://unpkg.com/stpageflip/dist/stpageflip.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://unpkg.com/stpageflip/dist/stpageflip.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  </noscript>
 
 
   <style>
@@ -33,11 +33,9 @@
 
   @yield('content')
 
-  <!-- StPageFlip JS -->
-  <script src="{{ asset('js/page-flip.browser.js') }}"></script>
-
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <!-- Optimized external JS with defer -->
+  <script defer src="{{ asset('js/page-flip.browser.js') }}"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
   @stack('scripts')
 

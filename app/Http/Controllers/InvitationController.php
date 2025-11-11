@@ -13,13 +13,14 @@ class InvitationController extends Controller
     {
         $guest = Guest::where('session', $session)
             ->where('slug', $guestSlug)
-            ->with('wedding')
+            ->with(['wedding.settings', 'wedding.galleries' => function ($query) {
+                $query->orderBy('created_at', 'asc')->limit(10); // Limit galleries for performance
+            }])
             ->firstOrFail();
 
         $wedding = $guest->wedding;
         $settings = $wedding->settings;
         $galleries = $wedding->galleries;
-        $settings = $wedding->settings;
 
         // Bagikan ke semua view termasuk layout
         view()->share('settings', $settings);

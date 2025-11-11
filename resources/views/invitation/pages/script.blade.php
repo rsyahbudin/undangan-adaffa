@@ -1,119 +1,118 @@
 @push('scripts')
 <script>
-    // Suppress console errors from external sources
+    // Performance optimized console error suppression
     const originalConsoleError = console.error;
     console.error = function(...args) {
-        // Filter out known external errors
         const message = args.join(' ');
         if (message.includes('play.google.com') ||
             message.includes('net::ERR_BLOCKED_BY_CLIENT') ||
             message.includes('Failed to load resource')) {
-            return; // Suppress these errors
+            return;
         }
         originalConsoleError.apply(console, args);
     };
 
-    // Ensure all elements have classList property
+    // Optimized classList support check (only check once)
+    let classListSupported = true;
+
     function ensureClassListSupport() {
-        const allElements = document.querySelectorAll('*');
-        allElements.forEach(element => {
-            if (!element.classList) {
-                Object.defineProperty(element, 'classList', {
-                    get: function() {
-                        return {
-                            add: function() {},
-                            remove: function() {},
-                            contains: function() {
-                                return false;
-                            },
-                            toggle: function() {}
-                        };
-                    }
-                });
-            }
-        });
+        if (!classListSupported) return;
+        try {
+            document.body.classList.add('test');
+            document.body.classList.remove('test');
+        } catch (e) {
+            classListSupported = false;
+            // Only patch if necessary
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                if (!element.classList) {
+                    Object.defineProperty(element, 'classList', {
+                        get: function() {
+                            return {
+                                add: function() {},
+                                remove: function() {},
+                                contains: function() {
+                                    return false;
+                                },
+                                toggle: function() {}
+                            };
+                        }
+                    });
+                }
+            });
+        }
     }
 
-    // Music autoplay handling with fallback
+    // Optimized music handling with reduced DOM queries
     let musicPlayed = false;
     let interactionListenersAdded = false;
+    let audioElement, toggleButton, playIcon, pauseIcon;
 
     function initMusic() {
-        const audio = document.getElementById('background-music');
-        const toggleButton = document.getElementById('music-toggle');
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
+        // Cache DOM elements
+        audioElement = document.getElementById('background-music');
+        toggleButton = document.getElementById('music-toggle');
+        playIcon = document.getElementById('play-icon');
+        pauseIcon = document.getElementById('pause-icon');
 
-        if (!audio || !toggleButton || !playIcon || !pauseIcon) return;
+        if (!audioElement || !toggleButton || !playIcon || !pauseIcon) return;
 
-        // Set initial icon states
+        // Set initial states
         playIcon.style.display = 'block';
         pauseIcon.style.display = 'none';
 
-        // Function to play music
+        // Optimized play function
         function playMusic() {
-            audio.play().then(() => {
+            audioElement.play().then(() => {
                 musicPlayed = true;
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
-                console.log('Music started playing');
-                // Remove fallback listeners if they exist
                 if (interactionListenersAdded) {
                     document.removeEventListener('click', playOnInteraction);
                     document.removeEventListener('touchstart', playOnInteraction);
                     interactionListenersAdded = false;
                 }
-            }).catch(error => {
-                console.log('Play failed, waiting for user interaction:', error);
+            }).catch(() => {
+                // Silent fail for autoplay
             });
         }
 
-        // Function to pause music
+        // Optimized pause function
         function pauseMusic() {
-            audio.pause();
+            audioElement.pause();
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
-            console.log('Music paused');
         }
 
-        // Toggle button events with comprehensive event prevention
+        // Single event listener with debouncing
         let isProcessingToggle = false;
-        const toggleEvents = ['click', 'touchstart', 'touchend', 'mousedown', 'mouseup'];
-        toggleEvents.forEach(eventType => {
-            toggleButton.addEventListener(eventType, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-                // Prevent multiple rapid clicks
-                if (isProcessingToggle) return;
-                isProcessingToggle = true;
+            if (isProcessingToggle) return;
+            isProcessingToggle = true;
 
-                // Force state check to ensure proper toggle
-                if (audio.paused || audio.currentTime === 0) {
-                    playMusic();
-                } else {
-                    pauseMusic();
-                }
+            if (audioElement.paused || audioElement.currentTime === 0) {
+                playMusic();
+            } else {
+                pauseMusic();
+            }
 
-                // Reset processing flag after a short delay
-                setTimeout(() => {
-                    isProcessingToggle = false;
-                }, 200);
-            }, {
-                passive: false
-            });
+            setTimeout(() => {
+                isProcessingToggle = false;
+            }, 200);
+        }, {
+            passive: false
         });
 
-        // Attempt autoplay on load
-        audio.volume = 0.5;
+        // Attempt autoplay
+        audioElement.volume = 0.5;
         playMusic();
 
-        // Fallback: Play on first user interaction anywhere on the page (excluding button)
+        // Optimized fallback interaction
         function playOnInteraction(e) {
-            // Don't trigger if clicking on the toggle button
             if (e.target.closest('#music-toggle')) return;
-
             if (!musicPlayed) {
                 playMusic();
                 document.removeEventListener('click', playOnInteraction);
@@ -122,7 +121,7 @@
             }
         }
 
-        // Add fallback only if autoplay failed (check after a short delay)
+        // Add fallback with delay
         setTimeout(() => {
             if (!musicPlayed && !interactionListenersAdded) {
                 document.addEventListener('click', playOnInteraction, {
@@ -132,27 +131,21 @@
                     passive: true
                 });
                 interactionListenersAdded = true;
-                console.log('Fallback interaction listeners added');
             }
         }, 100);
 
-        // Update button state when audio state changes
-        audio.addEventListener('play', () => {
+        // Optimized audio state listeners
+        audioElement.addEventListener('play', () => {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-            console.log('Audio play event triggered');
         });
 
-        audio.addEventListener('pause', () => {
+        audioElement.addEventListener('pause', () => {
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
-            console.log('Audio pause event triggered');
         });
 
-        // Handle audio ended event
-        audio.addEventListener('ended', () => {
-            pauseMusic();
-        });
+        audioElement.addEventListener('ended', pauseMusic);
     }
 </script>
 
@@ -205,55 +198,58 @@
         }
     }
 
+    // Optimized interactive elements setup with cached selectors
+    let interactiveElementsCached = null;
+    let radioButtonsCached = null;
+    let radioLabelsCached = null;
+
     function fixInteractiveElements() {
-        const interactiveElements = document.querySelectorAll('.flipbook-page iframe, .flipbook-page input, .flipbook-page select, .flipbook-page textarea, .flipbook-page button, .flipbook-page a, .flipbook-page label');
-        interactiveElements.forEach(element => {
-            element.style.pointerEvents = 'auto';
-            element.style.zIndex = '10';
+        if (!interactiveElementsCached) {
+            interactiveElementsCached = document.querySelectorAll('.flipbook-page iframe, .flipbook-page input, .flipbook-page select, .flipbook-page textarea, .flipbook-page button, .flipbook-page a, .flipbook-page label');
+        }
+        if (!radioButtonsCached) {
+            radioButtonsCached = document.querySelectorAll('.flipbook-page input[type="radio"]');
+        }
+        if (!radioLabelsCached) {
+            radioLabelsCached = document.querySelectorAll('.flipbook-page label');
+        }
 
-            // Prevent flipbook from triggering on interactive elements
-            element.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
+        // Batch style updates
+        const styles = 'pointer-events:auto;z-index:10;';
+        interactiveElementsCached.forEach(element => {
+            element.style.cssText += styles;
+            element.addEventListener('click', stopPropagation, {
+                passive: false
             });
-
-            element.addEventListener('mousedown', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
+            element.addEventListener('mousedown', stopPropagation, {
+                passive: false
             });
-
-            element.addEventListener('mouseup', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-            });
-        });
-
-        // Special handling for radio buttons
-        const radioButtons = document.querySelectorAll('.flipbook-page input[type="radio"]');
-        radioButtons.forEach(radio => {
-            radio.style.pointerEvents = 'auto';
-            radio.style.zIndex = '20';
-            radio.style.cursor = 'pointer';
-
-            radio.addEventListener('change', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                console.log('Radio button clicked:', this.value);
+            element.addEventListener('mouseup', stopPropagation, {
+                passive: false
             });
         });
 
-        // Special handling for labels containing radio buttons
-        const radioLabels = document.querySelectorAll('.flipbook-page label');
-        radioLabels.forEach(label => {
-            label.style.pointerEvents = 'auto';
-            label.style.cursor = 'pointer';
-            label.style.zIndex = '15';
-
-            label.addEventListener('click', function(e) {
-                e.stopPropagation();
-                e.stopImmediatePropagation();
+        // Radio buttons
+        radioButtonsCached.forEach(radio => {
+            radio.style.cssText += 'pointer-events:auto;z-index:20;cursor:pointer;';
+            radio.addEventListener('change', stopPropagation, {
+                passive: false
             });
         });
+
+        // Labels
+        radioLabelsCached.forEach(label => {
+            label.style.cssText += 'pointer-events:auto;cursor:pointer;z-index:15;';
+            label.addEventListener('click', stopPropagation, {
+                passive: false
+            });
+        });
+    }
+
+    // Shared event handler
+    function stopPropagation(e) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
     }
 
     function initPageFlip() {
@@ -359,19 +355,16 @@
         }));
     }
 
-    // Swipe instruction function
+    // Optimized swipe instruction with reduced DOM manipulation
+    let instructionElement = null;
+    let instructionTimeout = null;
+    let hasInteracted = false;
+    let fadeInStyle = null;
+
     function initSwipeInstruction(pageFlip) {
-        let instructionTimeout;
-        let instructionElement;
-        let hasInteracted = false;
-
         function showSwipeInstruction() {
-            // Remove existing instruction if any
-            if (instructionElement) {
-                instructionElement.remove();
-            }
+            if (instructionElement) return;
 
-            // Create instruction element with improved design
             instructionElement = document.createElement('div');
             instructionElement.className = 'fixed top-4 right-4 bg-gradient-to-r from-gray-800 to-gray-700 text-white px-4 py-3 rounded-xl text-xs md:text-sm font-medium z-50 shadow-2xl border border-gray-600 backdrop-blur-sm';
             instructionElement.innerHTML = `
@@ -383,28 +376,21 @@
                     </div>
                 </div>
             `;
-            instructionElement.style.animation = 'fadeIn 0.5s ease-out';
-            instructionElement.style.boxShadow = '0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)';
-            instructionElement.style.maxWidth = '200px';
+            instructionElement.style.cssText = 'animation:fadeIn 0.5s ease-out;max-width:200px;box-shadow:0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);';
 
-            // Add CSS animations
-            const style = document.createElement('style');
-            style.innerHTML = `
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(-10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `;
-            document.head.appendChild(style);
+            // Add fadeIn animation once
+            if (!fadeInStyle) {
+                fadeInStyle = document.createElement('style');
+                fadeInStyle.innerHTML = '@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }';
+                document.head.appendChild(fadeInStyle);
+            }
 
             document.body.appendChild(instructionElement);
 
             // Auto-hide after 8 seconds
             setTimeout(() => {
                 if (instructionElement) {
-                    instructionElement.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-                    instructionElement.style.opacity = '0';
-                    instructionElement.style.transform = 'translateX(-50%) scale(0.8)';
+                    instructionElement.style.cssText += 'transition:opacity 0.8s ease-out, transform 0.8s ease-out;opacity:0;transform:translateX(-50%) scale(0.8);';
                     setTimeout(() => {
                         if (instructionElement) {
                             instructionElement.remove();
@@ -418,10 +404,7 @@
         function resetTimer() {
             clearTimeout(instructionTimeout);
             if (!hasInteracted) {
-                instructionTimeout = setTimeout(() => {
-                    // Show instruction immediately after load if no interaction
-                    showSwipeInstruction();
-                }, 100); // Show immediately after load
+                instructionTimeout = setTimeout(showSwipeInstruction, 100);
             }
         }
 
@@ -429,8 +412,7 @@
             hasInteracted = true;
             clearTimeout(instructionTimeout);
             if (instructionElement) {
-                instructionElement.style.transition = 'opacity 0.5s ease-out';
-                instructionElement.style.opacity = '0';
+                instructionElement.style.cssText += 'transition:opacity 0.5s ease-out;opacity:0;';
                 setTimeout(() => {
                     if (instructionElement) {
                         instructionElement.remove();
@@ -440,17 +422,17 @@
             }
         }
 
-        // Start timer on page load
         resetTimer();
 
-        // Mark as interacted on any user interaction
-        ['click', 'touchstart', 'touchmove', 'keydown', 'scroll'].forEach(event => {
+        // Optimized event listeners
+        const events = ['click', 'touchstart', 'touchmove', 'keydown', 'scroll'];
+        events.forEach(event => {
             document.addEventListener(event, markAsInteracted, {
-                passive: true
+                passive: true,
+                once: true
             });
         });
 
-        // Mark as interacted when page changes
         if (pageFlip) {
             pageFlip.on('flip', markAsInteracted);
         }
@@ -460,8 +442,8 @@
         // Ensure classList support first
         ensureClassListSupport();
 
-        // Collect all image URLs to preload
-        const imagesToPreload = [
+        // Collect critical images to preload (only first few for faster loading)
+        const criticalImagesToPreload = [
             @if($settings && $settings -> cover_photo)
             "{{ Storage::url($settings->cover_photo) }}",
             @endif
@@ -471,75 +453,66 @@
             @if($wedding -> groom_photo)
             "{{ Storage::url($wedding->groom_photo) }}",
             @endif
-            @foreach($galleries as $gallery)
-            @if($gallery -> file_path)
-            "{{ asset('storage/' . $gallery->file_path) }}",
+            @if($galleries -> first() && $galleries -> first() -> file_path)
+            "{{ asset('storage/' . $galleries->first()->file_path) }}",
             @endif
-            @endforeach
-            @if(!$settings || !$settings -> cover_photo)
-            "{{ asset('images/bride.jpg') }}",
-            "{{ asset('images/groom.jpg') }}",
-            @endif
-        ].filter(url => url); // Remove empty strings
+        ].filter(url => url);
 
-
-        // Initialize music controls
+        // Initialize music controls early
         initMusic();
 
-        // Preload images and initialize everything
-        preloadImages(imagesToPreload).then(() => {
-            console.log('All images preloaded successfully');
-
-            // Hide loading overlay with fade effect
+        // Preload only critical images for faster initial load
+        preloadImages(criticalImagesToPreload).then(() => {
+            // Hide loading overlay immediately after critical images load
             const loadingOverlay = document.getElementById('loading-overlay');
             if (loadingOverlay) {
-                loadingOverlay.style.transition = 'opacity 0.5s ease-out';
+                loadingOverlay.style.transition = 'opacity 0.3s ease-out';
                 loadingOverlay.style.opacity = '0';
                 setTimeout(() => {
                     loadingOverlay.style.display = 'none';
-                }, 500);
+                }, 300);
             }
 
-            // Initialize PageFlip after preloading
+            // Initialize PageFlip after critical preloading
             let pageFlip = initPageFlip();
-
             initSwipeInstruction(pageFlip);
 
             if (!pageFlip) {
-                console.warn('PageFlip initialization failed, retrying...');
                 setTimeout(() => {
                     pageFlip = initPageFlip();
                     initSwipeInstruction(pageFlip);
-                }, 500);
+                }, 300);
             }
 
+            // Optimized resize handler with debouncing
+            let resizeTimeout;
             window.addEventListener('resize', function() {
-                if (pageFlip && typeof pageFlip.destroy === 'function') {
-                    try {
-                        pageFlip.destroy();
-                        allowPageScroll();
-                    } catch (error) {
-                        console.error('Error destroying PageFlip:', error);
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    if (pageFlip && typeof pageFlip.destroy === 'function') {
+                        try {
+                            pageFlip.destroy();
+                            allowPageScroll();
+                        } catch (error) {
+                            console.error('Error destroying PageFlip:', error);
+                        }
                     }
-                }
 
-                setTimeout(() => {
-                    pageFlip = initPageFlip();
-                    initSwipeInstruction(pageFlip);
-                }, 100);
+                    setTimeout(() => {
+                        pageFlip = initPageFlip();
+                        initSwipeInstruction(pageFlip);
+                    }, 100);
+                }, 250);
             });
 
-        }).catch(error => {
-            console.error('Error preloading images:', error);
-            // Still initialize even if some images fail
+        }).catch(() => {
+            // Initialize immediately if preloading fails
             const loadingOverlay = document.getElementById('loading-overlay');
             if (loadingOverlay) {
                 loadingOverlay.style.display = 'none';
             }
 
-            // Initialize PageFlip anyway
             let pageFlip = initPageFlip();
-
             initSwipeInstruction(pageFlip);
         });
     });
