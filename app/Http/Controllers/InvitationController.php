@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use App\Models\Rsvp;
+use App\Models\Wedding;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 
@@ -11,24 +12,24 @@ class InvitationController extends Controller
 {
     public function show($session)
     {
-        $guest = Guest::where('session', $session)
-            ->with(['wedding.settings', 'wedding.galleries' => function ($query) {
-                $query->orderBy('created_at', 'asc')->limit(10); // Limit galleries for performance
-            }])
-            ->first();
+        // Cari wedding berdasarkan session dari guest yang ada
+        $wedding = Wedding::whereHas('guests', function ($query) use ($session) {
+            $query->where('session', $session);
+        })->with(['settings', 'galleries' => function ($query) {
+            $query->orderBy('created_at', 'asc'); // Load all galleries to ensure video is included
+        }])->first();
 
-        if (!$guest) {
+        if (!$wedding) {
             abort(404, 'Session not found');
         }
 
-        $wedding = $guest->wedding;
         $settings = $wedding->settings;
         $galleries = $wedding->galleries;
 
         // Bagikan ke semua view termasuk layout
         view()->share('settings', $settings);
 
-        return view('invitation.show', compact('guest', 'wedding', 'settings', 'galleries', 'session'));
+        return view('invitation.show', compact('wedding', 'settings', 'galleries', 'session'));
     }
 
     public function rsvp(Request $request, $session)

@@ -33,7 +33,7 @@
             </div>
 
             <!-- First Reception -->
-            @if($guest->session == 1 && $wedding->reception1_date)
+            @if($session == 1 && $wedding->reception1_date)
             <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-3 rounded-lg shadow-sm hover:shadow-md transition mt-3">
                 <h3 class="text-sm md:text-sm lg:text-lg text-amber-900 mb-1 font-semibold uppercase tracking-wide"
                     style="font-family: 'Playfair Display', serif;">🎉 Wedding Reception</h3>
@@ -46,7 +46,7 @@
             @endif
 
             <!-- Second Reception -->
-            @if($guest->session == 2 && $wedding->reception2_date)
+            @if($session == 2 && $wedding->reception2_date)
             <div class="bg-white/90 border border-gray-100 p-2 md:p-3 lg:p-3 rounded-lg shadow-sm hover:shadow-md transition mt-3">
                 <h3 class="text-sm md:text-sm lg:text-lg text-amber-900 mb-1 font-semibold uppercase tracking-wide"
                     style="font-family: 'Playfair Display', serif;">🎊 Wedding Reception</h3>

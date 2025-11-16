@@ -34,7 +34,7 @@
         <!-- Guest Name -->
         <!-- <h2 class="text-2xl text-gray-900 font-semibold mb-2"
             style="font-family: 'Dancing Script', cursive;">
-            Welcome, {{ $guest->name }}
+            Welcome, Guest
         </h2> -->
 
         <p class="text-base md:text-base lg:text-base text-gray-600 mb-3 md:mb-4">
