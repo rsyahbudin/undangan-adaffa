@@ -15,19 +15,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-// Undangan tamu berdasarkan sesi + nama
-Route::get('/sesi{session}/{guestSlug}', [InvitationController::class, 'show'])
+// Undangan tamu berdasarkan sesi
+Route::get('/sesi{session}', [InvitationController::class, 'show'])
     ->whereNumber('session')
     ->name('invitation.show');
 
-Route::post('/sesi{session}/{guestSlug}/rsvp', [InvitationController::class, 'rsvp'])
+Route::post('/sesi{session}/rsvp', [InvitationController::class, 'rsvp'])
     ->whereNumber('session')
     ->name('invitation.rsvp');
 
 
 
 Route::get('/rsvp-messages', [RsvpController::class, 'index']);
-Route::post('/rsvp/{guestId}', [RsvpController::class, 'store']);
+Route::post('/rsvp', [RsvpController::class, 'store']);
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

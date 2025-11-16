@@ -14,20 +14,19 @@ class RsvpController extends Controller
     public function index()
     {
         //
-        $messages = Rsvp::with('guest:id,name')
-        ->whereNotNull('message')
-        ->where('message', '!=', '')
-        ->orderByDesc('created_at')
-        ->get()
-        ->map(function($rsvp) {
-            return [
-                'guest_name' => $rsvp->guest->name,
-                'message' => $rsvp->message,
-                'is_attending' => (bool) $rsvp->is_attending, // ← tambahkan ini
-            ];
-        });
+        $messages = Rsvp::whereNotNull('message')
+            ->where('message', '!=', '')
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($rsvp) {
+                return [
+                    'guest_name' => $rsvp->name,
+                    'message' => $rsvp->message,
+                    'is_attending' => (bool) $rsvp->is_attending, // ← tambahkan ini
+                ];
+            });
 
-    return response()->json(['messages' => $messages]);
+        return response()->json(['messages' => $messages]);
     }
 
     /**
@@ -41,21 +40,16 @@ class RsvpController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $guestId)
+    public function store(Request $request)
     {
-        $guest = Guest::findOrFail($guestId);
-
         $validated = $request->validate([
+            'name'            => 'required|string|max:255',
             'is_attending'    => 'required|boolean',
             'message'         => 'nullable|string|max:1000',
         ]);
 
-
-        // Simpan atau update RSVP
-        $rsvp = Rsvp::updateOrCreate(
-            ['guest_id' => $guest->id],
-            $validated
-        );
+        // Simpan RSVP baru
+        $rsvp = Rsvp::create($validated);
 
         return response()->json([
             'success' => true,

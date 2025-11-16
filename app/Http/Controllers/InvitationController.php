@@ -9,14 +9,17 @@ use App\Models\Setting;
 
 class InvitationController extends Controller
 {
-    public function show($session, $guestSlug)
+    public function show($session)
     {
         $guest = Guest::where('session', $session)
-            ->where('slug', $guestSlug)
             ->with(['wedding.settings', 'wedding.galleries' => function ($query) {
                 $query->orderBy('created_at', 'asc')->limit(10); // Limit galleries for performance
             }])
-            ->firstOrFail();
+            ->first();
+
+        if (!$guest) {
+            abort(404, 'Session not found');
+        }
 
         $wedding = $guest->wedding;
         $settings = $wedding->settings;
@@ -25,16 +28,13 @@ class InvitationController extends Controller
         // Bagikan ke semua view termasuk layout
         view()->share('settings', $settings);
 
-        return view('invitation.show', compact('guest', 'wedding', 'settings', 'galleries'));
+        return view('invitation.show', compact('guest', 'wedding', 'settings', 'galleries', 'session'));
     }
 
-    public function rsvp(Request $request, $session, $guestSlug)
+    public function rsvp(Request $request, $session)
     {
-        $guest = Guest::where('session', $session)
-            ->where('slug', $guestSlug)
-            ->firstOrFail();
-
         $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'is_attending' => 'required|boolean',
             'message' => 'nullable|string|max:1000',
         ]);
@@ -42,11 +42,8 @@ class InvitationController extends Controller
         // Set attending_count to 0 as requested
         $validated['attending_count'] = 0;
 
-        // Simpan atau update RSVP
-        $rsvp = Rsvp::updateOrCreate(
-            ['guest_id' => $guest->id],
-            $validated
-        );
+        // Simpan RSVP baru tanpa guest_id
+        $rsvp = Rsvp::create($validated);
 
         return response()->json([
             'success' => true,

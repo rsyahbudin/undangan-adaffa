@@ -10,14 +10,9 @@ class Rsvp extends Model
     use HasFactory;
 
     protected $fillable = [
-        'guest_id',
+        'name',
         'is_attending',
         'attending_count',
         'message'
     ];
-
-    public function guest()
-    {
-        return $this->belongsTo(Guest::class);
-    }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invitation Wedding Daffa & Nadia for ' . $guest->name)
+@section('title', 'Invitation Wedding Daffa & Nadia - Session ' . $session)
 
 @section('content')
 <div id="flipbook-container" class="w-full min-h-screen flex justify-center items-center p-2 sm:p-4 md:p-5 bg-black relative overflow-hidden">
