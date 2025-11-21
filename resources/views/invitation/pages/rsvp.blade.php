@@ -44,7 +44,7 @@
             </select>
 
             <textarea id="message" rows="3" placeholder="Write your message or blessings..."
-                class="w-full px-3 py-1.5 border border-gray-300 rounded text-[11px] md:text-sm focus:ring-1 focus:ring-amber-400 focus:outline-none resize-none"></textarea>
+                class="w-full px-3 py-1.5 border border-gray-300 rounded text-[11px] md:text-sm focus:ring-1 focus:ring-amber-400 focus:outline-none resize-none" required></textarea>
 
             <button type="submit"
                 class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-1.5 px-3 rounded text-[11px] md:text-sm transition-all duration-300">
