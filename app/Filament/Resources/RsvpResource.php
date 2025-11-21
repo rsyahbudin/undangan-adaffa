@@ -33,9 +33,9 @@ class RsvpResource extends Resource
 
                 Forms\Components\Toggle::make('is_attending')->label('Hadir?'),
 
-                Forms\Components\TextInput::make('attending_count')
-                    ->numeric()
-                    ->label('Jumlah Hadir'),
+                // Forms\Components\TextInput::make('attending_count')
+                //     ->numeric()
+                //     ->label('Jumlah Hadir'),
 
                 Forms\Components\Textarea::make('message')->label('Ucapan'),
             ]);
@@ -45,9 +45,9 @@ class RsvpResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('guest.name')->label('Tamu')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('name')->label('Tamu')->sortable()->searchable(),
                 Tables\Columns\IconColumn::make('is_attending')->boolean()->label('Hadir'),
-                Tables\Columns\TextColumn::make('attending_count')->label('Jumlah Hadir'),
+                // Tables\Columns\TextColumn::make('attending_count')->label('Jumlah Hadir'),
                 Tables\Columns\TextColumn::make('message')->limit(50)->label('Ucapan'),
             ])
             ->filters([
